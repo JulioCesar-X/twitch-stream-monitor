@@ -41,7 +41,7 @@ export default {
 
     const filteredStreams = computed(() => {
       if (!streamStore.searchQuery) {
-        return streamStore.streams; // ✅ Show full list when no search is applied
+        return streamStore.streams;
       }
       return streamStore.streams.filter(stream =>
         stream.name.toLowerCase().includes(streamStore.searchQuery.toLowerCase())

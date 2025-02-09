@@ -48,18 +48,24 @@ export default {
     stream: Object,
   },
   setup(props) {
+    const BASE_URL = "https://twitch-proxy.freecodecamp.rocks/twitch-api/users/";
+    
     const twitchIcon = ref(new URL('@/assets/twitch-icon.svg', import.meta.url).href);
     const defaultAvatar = ref(new URL('@/assets/default-avatar.png', import.meta.url).href);
     const avatarUrl = ref(defaultAvatar.value);
 
     const fetchUserAvatar = async () => {
       try {
-        const response = await axios.get(
-          `https://twitch-proxy.freecodecamp.rocks/twitch-api/users/${props.stream.name}`
-        );
-        avatarUrl.value = response.data.logo || defaultAvatar.value;
+        const response = await axios.get(`${BASE_URL}${props.stream.name}`);
+        
+        if (response.data.logo) {
+          avatarUrl.value = response.data.logo;
+        } else {
+          console.warn(`⚠️ No avatar found for ${props.stream.name}. Using default.`);
+          avatarUrl.value = defaultAvatar.value;
+        }
       } catch (error) {
-        console.error("Error fetching avatar:", error);
+        console.error(`❌ Failed to fetch avatar for ${props.stream.name}:`, error);
         avatarUrl.value = defaultAvatar.value;
       }
     };
